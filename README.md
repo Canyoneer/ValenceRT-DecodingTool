@@ -39,7 +39,9 @@ some kind of battery ID. Then a bus ID is assigned to the battery ID with a mess
 After 2-3 battery ID polling loops the display sends a data poll request for battery every battery ID it has assigned
   before. This requests look like "02030029001bd43a". This is responded by message like "020336171515150f000004a8005004151715181815800084000000840000000b0d090d2834000028340000eeee001004000a0d090d0a0d0b0deae4".
   
-These data messages seem to have a fixed format and contain information at fixed positions. For details please check the code.    
+These data messages seem to have a fixed format and contain information at fixed positions. For details please check the
+ code oder the datalog.txt file. The file contains a timestamped log of the communication of the display with two 
+ connected batteries.    
 
 ### Licence
 MIT
@@ -54,5 +56,8 @@ always the same, so maybe they measure the same group, but use separate ADC read
 * I2: This seems to be the battery current as I1, but while charging it is sometimes lower than I1 and the actual charging current. This might be caused by the balancer (temps should go up then, but I haven't checked).    
 * Undiscovered data points: At least the fault codes are missing. If anyone can identify them or anything else in the 
 data message I will gladly add it. 
+* It's unclear how the data requests are repeated, when the display keeps running. The first data request after a polling 
+cycle is followed by other data requests. These following data request are followed by an unidentified message without 
+ response before the bus goes idle for 3 seconds. These messages could be important for a SOC display.     
 * When the battery is idle the RX led on my RS485 connector flashes roughly every 16 seconds when it is not connected to 
-USB. I haven't found out why yet.     
+USB. I haven't found out why yet and it is probably a fault of the connector.     
