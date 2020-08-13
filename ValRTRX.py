@@ -14,6 +14,7 @@ req_bat_active = bytes.fromhex("ff4112434242313132383130")
 
 current_bat_id = 2
 bat_ids = []
+bat_dupes = []
 additional_reqs = []
 
 
@@ -89,12 +90,19 @@ for i in range(0, 2):
             print("<-", cc.hex())
             if cc.hex().startswith("ff70"):
                 # received id from battery
-                req = req_bat_active + cc[12:15] + bytes([current_bat_id])
+                bat_id = cc[12:15]
+                bat_id_hex = bat_id.hex()
+                if bat_id_hex in bat_dupes: # skip duplicates
+                    print("skipping duplicate id ", bat_id_hex)
+                    continue
+                bat_dupes.append(bat_id_hex)
+
+                req = req_bat_active + bat_id + bytes([current_bat_id])
                 bat_ids.append(current_bat_id)
                 current_bat_id += 1
                 req = req + libscrc.modbus(req).to_bytes(2, 'little')
                 s.write(req)
-                print("-> ", req.hex(), s.readline().hex(), "# received battery id", cc[12:15].hex(),
+                print("-> ", req.hex(), s.readline().hex(), "# received battery id", bat_id_hex,
                       "assigning bus id", current_bat_id - 1)
                 print(s.readline().hex(), "# response of set active bat id")
 
