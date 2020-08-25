@@ -1,6 +1,7 @@
 import serial.rs485
 import libscrc
 import sys
+import time
 
 sPort = 'COM4'
 req_init = "000300fc0000842b000300fc0000842b"
@@ -101,9 +102,11 @@ for i in range(0, 2):
                 bat_ids.append(current_bat_id)
                 current_bat_id += 1
                 req = req + libscrc.modbus(req).to_bytes(2, 'little')
+                time.sleep(0.003)
                 s.write(req)
                 print("-> ", req.hex(), s.readline().hex(), "# received battery id", bat_id_hex,
                       "assigning bus id", current_bat_id - 1)
+                time.sleep(0.035)
                 print(s.readline().hex(), "# response of set active bat id")
 
             if len(cc) >= 58 and cc.hex().startswith("0203"):
@@ -115,6 +118,7 @@ for reqid in bat_ids:
     req = req + libscrc.modbus(req).to_bytes(2, 'little')
     print("->", req.hex(), "# request data from bus id", reqid)
     s.write(req)
+    time.sleep(0.008)
     cc = s.readline()
     for i in range(0, 2):
         cc += s.readline()
