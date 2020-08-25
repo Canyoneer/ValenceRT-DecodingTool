@@ -11,7 +11,15 @@ This is not intended to be an end user tool or library, but it should be easy to
 extract/port the protocol for your own needs.     
 
 ###Usage
-The script needs Python 3, it accepts one parameter that is used as COM port (eg COM9). Without it a default port will 
+The script needs Python 3 and the libraries pyserial and libscrc. 
+
+Install the libraries with:
+
+ `pip install pyserial`
+ 
+ `pip install libscrc`
+
+The script accepts one parameter that is used as COM port (eg COM9). Without it a default port will 
 be used, and probably not the right one. Example:
 
 `python ValRTRX.py COM9`
