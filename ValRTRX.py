@@ -4,9 +4,9 @@ import sys
 import time
 
 sPort = 'COM4'
-req_init = "000300fc0000842b000300fc0000842b"
+req_init = "000300fc0000842b"
 
-req_ids_loop = ["ff4306064246ff4306064246", "ff5006003381",
+req_ids_loop = ["ff4306064246", "ff4306064246", "ff5006003381",
                 "ff500601f241", "ff500602b240", "ff5006037380", "ff5006043242", "ff500605f382"]
 
 req_data = bytes.fromhex("030029001b")
@@ -41,6 +41,9 @@ s = serial.Serial(
 s.rs485_mode = serial.rs485.RS485Settings(True, False, False, None, None)
 
 s.write(bytes.fromhex(req_init))
+time.sleep(0.001)
+s.write(bytes.fromhex(req_init))
+time.sleep(0.001)
 
 
 def evaluate_battery_status():
@@ -86,6 +89,7 @@ for i in range(0, 2):
     for req in req_ids_loop:
         print("->", req)
         s.write(bytes.fromhex(req))
+        time.sleep(0.03)
         cc = s.readline()
         if len(cc) > 0:
             print("<-", cc.hex())
@@ -93,7 +97,7 @@ for i in range(0, 2):
                 # received id from battery
                 bat_id = cc[12:15]
                 bat_id_hex = bat_id.hex()
-                if bat_id_hex in bat_dupes: # skip duplicates
+                if bat_id_hex in bat_dupes:  # skip duplicates
                     print("skipping duplicate id ", bat_id_hex)
                     continue
                 bat_dupes.append(bat_id_hex)
@@ -102,10 +106,9 @@ for i in range(0, 2):
                 bat_ids.append(current_bat_id)
                 current_bat_id += 1
                 req = req + libscrc.modbus(req).to_bytes(2, 'little')
-                time.sleep(0.003)
-                s.write(req)
-                print("-> ", req.hex(), s.readline().hex(), "# received battery id", bat_id_hex,
+                print("-> ", req.hex(), "# received battery id", bat_id_hex,
                       "assigning bus id", current_bat_id - 1)
+                s.write(req)
                 time.sleep(0.035)
                 print(s.readline().hex(), "# response of set active bat id")
 
@@ -118,7 +121,7 @@ for reqid in bat_ids:
     req = req + libscrc.modbus(req).to_bytes(2, 'little')
     print("->", req.hex(), "# request data from bus id", reqid)
     s.write(req)
-    time.sleep(0.008)
+    time.sleep(0.03)
     cc = s.readline()
     for i in range(0, 2):
         cc += s.readline()
