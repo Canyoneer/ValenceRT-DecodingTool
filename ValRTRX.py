@@ -11,7 +11,7 @@ req_ids_loop = ["ff4306064246", "ff4306064246", "ff5006003381",
 
 req_data = bytes.fromhex("030029001b")
 
-req_bat_active = bytes.fromhex("ff4112434242313132383130")
+req_bat_active = bytes.fromhex("ff4112")
 
 current_bat_id = 2
 bat_ids = []
@@ -95,7 +95,7 @@ for i in range(0, 2):
             print("<-", cc.hex())
             if cc.hex().startswith("ff70"):
                 # received id from battery
-                bat_id = cc[12:15]
+                bat_id = cc[3:15]
                 bat_id_hex = bat_id.hex()
                 if bat_id_hex in bat_dupes:  # skip duplicates
                     print("skipping duplicate id ", bat_id_hex)
