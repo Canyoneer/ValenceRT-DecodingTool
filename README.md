@@ -25,7 +25,7 @@ work, but I haven't tested that.
 ### Physical connection
 This is for the 5 pin AMP-Superseal connector. Pin 3 is RS485 A and pin 4 RS485 B on the connector (pin 1 can be identified by the key in the connector edge between 1 and 2). 
 
-2 is ground and 5 the supply voltage. But there is no need to connect this.      
+2 is ground and 5 the 5V supply voltage. But there is no need to connect this. I don't know the maximum current of this supply voltage. The Valence display uses about 34mA with 10 active leds.      
 
 ### Protocol description
 The baudrate is 115200, no parity, one stopbit, little endian encoding. The messages end with a 2 byte modbus CRC.
@@ -49,6 +49,7 @@ MIT
 Use it, improve it and make the world a better place.
 
 ### Todo and remarks
+* Why is there no charge cycle count? I couldn't find it. But I might have been looking for the wrong pattern. I was looking for an integer value that increases by one after a full charge. But it could be a float value or some charge counter instead. Any help would be appreciated.     
 * Why are there 6 numbered voltages? I don't know. These seem to be voltages of the four serial cell groups. The 
 numbers fit. But then there should only be four. In fact there are even more bytes with numbers that could be voltages, 
 but they seem to be duplicates of these six. Possible U5 is the same as U4 and U6 is U1. They are very close, but not 
