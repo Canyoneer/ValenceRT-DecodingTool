@@ -36,7 +36,7 @@ s = serial.Serial(
     timeout=0.005
 )
 
-s.rs485_mode = serial.rs485.RS485Settings(True, False, False, None, None)
+# s.rs485_mode = serial.rs485.RS485Settings(True, False, False, None, None) # not supported on linux with certain interfaces and not needed, see #3
 
 s.write(bytes.fromhex(req_init))
 
